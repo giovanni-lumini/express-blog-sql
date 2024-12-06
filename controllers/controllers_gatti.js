@@ -1,15 +1,15 @@
-/* const gatti = require("../db/db_gatti.js") */
+const gatti = require("../db/db_gatti.js")
 //serve per aggiornare il contenuto del file db
-/* const fs = require("fs") */
+const fs = require("fs")
 
 //INIZIO NUOVO ESERCIZIO
 //importiamo il file di connessione al database
 const connection = require("../db/db.js");
 
 //INDEX
-function indexxx(req, res) {
+function index(req, res) {
     //prepariamo la query
-    const sql = `SELECT * FROM posts`
+    const sql = `SELECT * FROM posts`;
     //eseguiamo la query
     connection.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: "database query failed" });
@@ -17,36 +17,30 @@ function indexxx(req, res) {
     })
 }
 
-
-
-
-
-
-
-
-
-
-//VECCHIO ESERCIZIO
-//1-mostro tutta l'array di oggetti
-const index = (req, res) => {
-    res.json({
-        data: gatti,
-        count: gatti.length
+//SHOW
+function show(req, res) {
+    //recuperiamo l'id dall'url
+    const id = req.params.id
+    //prepariamo la query
+    const sql = `SELECT * FROM posts WHERE id = ?`;
+    //eseguiamo la query
+    connection.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: "database query failed" });
+        if (results.length === 0) return res.status(404).json({ error: "post not found" });
+        res.json(results[0]);
     })
 }
 
 
-//1-A-mostro solo un oggetto dell'array cercando per nome
-const show = (req, res) => {
-    const gatto = gatti.find((gatto) => gatto.nome.toLowerCase() === req.params.nome)
 
-    if (!gatto) {
-        return res.status(404).json({
-            error: `Gatto non trovato: ${req.params.nome}`
-        })
-    }
-    return res.status(200).json({ data: gatto })
-}
+
+
+
+
+
+
+
+
 
 
 //2-aggiungo un oggetto all'array
