@@ -1,13 +1,37 @@
-const gatti = require("../db/db_gatti.js")
+/* const gatti = require("../db/db_gatti.js") */
 //serve per aggiornare il contenuto del file db
-const fs = require("fs")
+/* const fs = require("fs") */
+
+//INIZIO NUOVO ESERCIZIO
+//importiamo il file di connessione al database
+const connection = require("../db/db.js");
+
+//INDEX
+function indexxx(req, res) {
+    //prepariamo la query
+    const sql = `SELECT * FROM posts`
+    //eseguiamo la query
+    connection.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: "database query failed" });
+        res.json(results)
+    })
+}
 
 
+
+
+
+
+
+
+
+
+//VECCHIO ESERCIZIO
 //1-mostro tutta l'array di oggetti
 const index = (req, res) => {
     res.json({
-      data: gatti,
-      count: gatti.length
+        data: gatti,
+        count: gatti.length
     })
 }
 
@@ -16,12 +40,12 @@ const index = (req, res) => {
 const show = (req, res) => {
     const gatto = gatti.find((gatto) => gatto.nome.toLowerCase() === req.params.nome)
 
-    if(!gatto){
+    if (!gatto) {
         return res.status(404).json({
             error: `Gatto non trovato: ${req.params.nome}`
         })
     }
-    return res.status(200).json({data: gatto})
+    return res.status(200).json({ data: gatto })
 }
 
 
@@ -47,14 +71,14 @@ const store = (req, res) => {
 
 //3-modifico un oggetto dall'array
 const update = (req, res) => {
-    const gatto = gatti.find(gatto => gatto.nome.toLowerCase() ===(req.params.nome))
+    const gatto = gatti.find(gatto => gatto.nome.toLowerCase() === (req.params.nome))
 
-    if(!gatto){
+    if (!gatto) {
         return res.status(404).json({
             error: `Gatto non trovato: ${req.params.nome}`
         })
     }
-    
+
     gatto.nome = req.body.nome
     gatto.colore = req.body.colore
     gatto.eta = req.body.eta
@@ -71,15 +95,15 @@ const update = (req, res) => {
 
 //3-elimino un oggetto dell'array
 const destroy = (req, res) => {
-    const gatto = gatti.find(gatto => gatto.nome.toLowerCase() ===(req.params.nome))
+    const gatto = gatti.find(gatto => gatto.nome.toLowerCase() === (req.params.nome))
 
-    if(!gatto){
+    if (!gatto) {
         return res.status(404).json({
             error: `Gatto non trovato: ${req.params.nome}`
         })
     }
-    
-    const new_gatti = gatti.filter(gatto => gatto.nome.toLowerCase() !==(req.params.nome))
+
+    const new_gatti = gatti.filter(gatto => gatto.nome.toLowerCase() !== (req.params.nome))
 
     //aggiorno il contenuto dell'array permanentemente del file db
     fs.writeFileSync("./db/db_gatti.js", `module.exports = ${JSON.stringify(new_gatti, null, 4)}`)
