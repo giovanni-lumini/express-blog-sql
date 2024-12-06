@@ -30,12 +30,14 @@ function show(req, res) {
 //DESTROY
 function destroy(req, res) {
     //recuperiamo l'id dall'url
-    const { id } = req.params.id
+    const id = req.params.id
     //eseguiamo la query per eliminare il post
     connection.query(`DELETE FROM posts WHERE id = ?`, [id], (err) => {
         if (err) return res.status(500).json({ error: "failed to delete post" });
         res.sendStatus(204)
     })
+    console.log(id);
+
 }
 
 module.exports = {
